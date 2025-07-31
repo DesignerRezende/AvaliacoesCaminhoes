@@ -2,35 +2,45 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Registro de Acesso</title>
+  <title>Registro de Pesquisa</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      color: #222;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
+      background-color: #f0f0f0;
+      color: #333;
+      text-align: center;
+      padding-top: 100px;
     }
   </style>
 </head>
 <body>
   <h2>Registrando acesso...</h2>
-  <p id="status">Aguarde...</p>
+  <p id="status">Aguarde um instante...</p>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const caminhao = params.get("caminhao");
 
+    const links = {
+      "01": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR1A/viewform",
+      "02": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR2A/viewform",
+      "03": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR3A/viewform",
+      "04": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR4A/viewform",
+      "05": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR5A/viewform"
+    };
+
+    const link = links[caminhao];
     const colaborador = localStorage.getItem("colaborador") || "Visitante";
-    const link = window.location.href;
+
+    if (!link) {
+      document.getElementById("status").innerText = "Erro: Caminhão inválido.";
+      throw new Error("Caminhão inválido");
+    }
 
     const payload = {
-      colaborador: colaborador,
-      caminhao: caminhao,
-      link: link
+      caminhao,
+      link,
+      colaborador
     };
 
     fetch("https://script.google.com/macros/s/SEU_DEPLOY_ID/exec", {
@@ -40,13 +50,11 @@
         "Content-Type": "application/json"
       },
       body: JSON.stringify(payload)
-    })
-    .then(() => {
-      document.getElementById("status").innerText = "Acesso registrado com sucesso.";
-    })
-    .catch((error) => {
-      console.error("Erro ao registrar:", error);
-      document.getElementById("status").innerText = "Erro ao registrar: " + error.message;
+    }).finally(() => {
+      document.getElementById("status").innerText = "Redirecionando para o formulário...";
+      setTimeout(() => {
+        window.location.href = link;
+      }, 1000);
     });
   </script>
 </body>
