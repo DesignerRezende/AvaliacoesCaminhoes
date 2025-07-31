@@ -44,9 +44,8 @@
     }
   </style>
   <script>
-    // ***** ATENÇÃO AQUI, CAROL! *****
-    // VOCÊ DEVE SUBSTITUIR ESTA URL PELA URL DA SUA ÚLTIMA IMPLANTAÇÃO DO APPS SCRIPT.
-    // ESSA URL DEVE SER A MESMA QUE VOCÊ USOU OU USA PARA AS AVALIAÇÕES DO GOOGLE.
+    // ***** IMPORTANTE: COLOQUE AQUI A URL DA SUA ÚLTIMA IMPLANTAÇÃO DO APPS SCRIPT *****
+    // DEVE SER A MESMA URL USADA PARA O index-google-meu-negocio.html
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLZbySQBptbSsYxC0er5ppOCCe9x9k4X8-0hptQCFk6ByuMq3YxCz5eKNHdfug/exec";
     const LINK_FORMULARIO = "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform";
 
@@ -55,10 +54,12 @@
       const caminhao = params.get("caminhao") || "desconhecido";
 
       const dados = {
-        tipo: "pesquisa", // Isso é crucial para o Apps Script identificar que é uma pesquisa
+        tipo: "pesquisa", // Isso é o que diferencia no Apps Script
         caminhao: caminhao,
         link: LINK_FORMULARIO
       };
+
+      console.log("Dados que serão enviados para o Apps Script:", dados); // Log para seu console do navegador
 
       try {
         await fetch(APPS_SCRIPT_URL, {
@@ -72,7 +73,6 @@
         console.error("Erro ao registrar pesquisa de caminhão:", error);
       }
 
-      // Redirecionar após 1s
       setTimeout(() => {
         window.location.href = LINK_FORMULARIO;
       }, 1000);
