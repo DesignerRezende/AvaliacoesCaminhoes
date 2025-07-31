@@ -2,61 +2,52 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Registro de Acesso</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      text-align: center;
-      padding: 40px;
-    }
-
-    .status {
-      margin-top: 30px;
-      font-size: 1.2em;
-      color: #333;
+      background: #f7f7f7;
+      color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
     }
   </style>
 </head>
 <body>
   <h2>Registrando acesso...</h2>
-  <div class="status" id="status">Por favor, aguarde.</div>
+  <p id="status">Aguarde...</p>
 
   <script>
-    async function registrarAcesso() {
-      const linkAtual = window.location.href;
-      const urlParams = new URLSearchParams(window.location.search);
-      const caminhao = urlParams.get("caminhao"); // usado para detectar acesso de caminhões
+    const params = new URLSearchParams(window.location.search);
+    const caminhao = params.get("caminhao");
 
-      let dados = {
-        link: linkAtual
-      };
+    const colaborador = localStorage.getItem("colaborador") || "Visitante";
+    const link = window.location.href;
 
-      if (caminhao) {
-        dados.caminhao = caminhao;
-      } else {
-        dados.nome = urlParams.get("colaborador") || "não informado";
-        dados.loja = urlParams.get("loja") || "não informado";
-      }
+    const payload = {
+      colaborador: colaborador,
+      caminhao: caminhao,
+      link: link
+    };
 
-      try {
-        const resposta = await fetch("https://script.google.com/macros/s/SEU_DEPLOY_AQUI/exec", {
-          method: "POST",
-          body: JSON.stringify(dados),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-
-        const texto = await resposta.text();
-        document.getElementById("status").textContent = texto;
-      } catch (erro) {
-        document.getElementById("status").textContent = "Erro ao registrar: " + erro.message;
-      }
-    }
-
-    registrarAcesso();
+    fetch("https://script.google.com/macros/s/SEU_DEPLOY_ID/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      document.getElementById("status").innerText = "Acesso registrado com sucesso.";
+    })
+    .catch((error) => {
+      console.error("Erro ao registrar:", error);
+      document.getElementById("status").innerText = "Erro ao registrar: " + error.message;
+    });
   </script>
 </body>
 </html>
