@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avaliação Rezende</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Avaliação Caminhão Rezende</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
     body {
@@ -47,11 +47,11 @@
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLZbySQBptbSsYxC0er5ppOCCe9x9k4X8-0hptQCFk6ByuMq3YxCz5eKNHdfug/exec";
     const LINK_FORMULARIO = "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform";
 
-    async function registrarAcesso() {
+    async function registrarPesquisa() {
       const params = new URLSearchParams(window.location.search);
       const caminhao = params.get("caminhao") || "desconhecido";
 
-      const data = {
+      const dados = {
         tipo: "pesquisa",
         caminhao: caminhao,
         link: LINK_FORMULARIO
@@ -61,24 +61,24 @@
         await fetch(APPS_SCRIPT_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-          mode: "no-cors"
+          body: JSON.stringify(dados),
+          mode: 'no-cors'
         });
-      } catch (err) {
-        console.error("Erro ao registrar:", err);
+      } catch (error) {
+        console.error("Erro ao registrar pesquisa:", error);
       }
 
-      // Redireciona para o formulário
+      // Redirecionar após 1s
       setTimeout(() => {
         window.location.href = LINK_FORMULARIO;
       }, 1000);
     }
   </script>
 </head>
-<body onload="registrarAcesso()">
+<body onload="registrarPesquisa()">
   <img src="https://raw.githubusercontent.com/DesignerRezende/avaliacoes-rezende/main/Logo%20Rezende%20Branca.png" alt="Rezende Materiais para Construção" class="logo">
   <h1>Estamos quase lá!</h1>
-  <p>Obrigado por participar! Você será redirecionado para a pesquisa.</p>
+  <p>Você será redirecionado para avaliar o atendimento do nosso caminhão.</p>
   <div class="loader"></div>
 </body>
 </html>
