@@ -1,90 +1,109 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pesquisa Rezende</title>
+  <meta charset="UTF-8">
+  <title>Registro de Pesquisa - Caminhões</title>
   <style>
     body {
-      background-color: #141b4d;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      font-family: 'Montserrat', sans-serif;
+      font-family: Arial, sans-serif;
+      margin: 40px;
     }
-    .logo {
-      width: 200px;
-      margin-bottom: 20px;
-    }
-    h1 {
-      font-size: 24px;
-      color: #ff7a15;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 18px;
-    }
-    .loader {
-      border: 6px solid #ffffff;
-      border-top: 6px solid #ff7a15;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
+
+    label {
+      display: block;
       margin-top: 20px;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+
+    select, input {
+      padding: 8px;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #141b4d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0d1333;
+    }
+
+    .mensagem {
+      margin-top: 20px;
+      font-weight: bold;
     }
   </style>
+</head>
+<body>
+
+  <h1>Registro de Pesquisa - Caminhões</h1>
+
+  <label for="caminhao">Selecione o caminhão avaliado:</label>
+  <select id="caminhao">
+    <option value="">-- Selecione --</option>
+    <option value="Caminhão 01">Caminhão 01</option>
+    <option value="Caminhão 02">Caminhão 02</option>
+    <option value="Caminhão 03">Caminhão 03</option>
+    <option value="Caminhão 04">Caminhão 04</option>
+    <option value="Caminhão 05">Caminhão 05</option>
+  </select>
+
+  <label for="link">Cole aqui o link do formulário:</label>
+  <input type="url" id="link" placeholder="https://docs.google.com/forms/..." required>
+
+  <button onclick="registrarPesquisa()">Registrar Pesquisa</button>
+
+  <div id="mensagem" class="mensagem"></div>
+
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLZbySQBptbSsYxC0er5ppOCCe9x9k4X8-0hptQCFk6ByuMq3YxCz5eKNHdfug/exec";
+    const urlWebApp = "https://script.google.com/macros/s/AKfycbwWuq1lJ8UYc1B3V.../exec"; // substitua pelo SEU link do WebApp
 
-    const FORM_LINKS = {
-      "01": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform",
-      "02": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform",
-      "03": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform",
-      "04": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform",
-      "05": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform"
-    };
+    function registrarPesquisa() {
+      const caminhao = document.getElementById("caminhao").value.trim();
+      const link = document.getElementById("link").value.trim();
+      const mensagem = document.getElementById("mensagem");
 
-    async function registrarAcesso() {
-      const params = new URLSearchParams(window.location.search);
-      const caminhao = params.get("caminhao") || "01";
-      const linkFormulario = FORM_LINKS[caminhao] || FORM_LINKS["01"];
-
-const data = {
-  tipo: "pesquisa",
-  caminhao: "Caminhão " + caminhao,
-  link: linkFormulario
-};
-
-      try {
-        await fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-          mode: 'no-cors'
-        });
-      } catch (error) {
-        console.error("Erro ao registrar acesso:", error);
+      if (!caminhao || !link) {
+        mensagem.textContent = "Por favor, preencha todos os campos.";
+        mensagem.style.color = "red";
+        return;
       }
 
-      setTimeout(() => {
-        window.location.href = linkFormulario;
-      }, 1000);
+      const dados = {
+        tipo: "pesquisa", // MUITO IMPORTANTE
+        caminhao: caminhao,
+        link: link
+      };
+
+      mensagem.textContent = "Enviando...";
+      mensagem.style.color = "#141b4d";
+
+      fetch(urlWebApp, {
+        method: "POST",
+        body: JSON.stringify(dados),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(response => response.text())
+      .then(texto => {
+        mensagem.textContent = texto;
+        mensagem.style.color = "green";
+        document.getElementById("caminhao").value = "";
+        document.getElementById("link").value = "";
+      })
+      .catch(error => {
+        mensagem.textContent = "Erro ao enviar: " + error.message;
+        mensagem.style.color = "red";
+      });
     }
   </script>
-</head>
-<body onload="registrarAcesso()">
-  <img src="https://raw.githubusercontent.com/DesignerRezende/avaliacoes-rezende/main/Logo%20Rezende%20Branca.png" alt="Logo Rezende" class="logo" />
-  <h1>Estamos quase lá!</h1>
-  <p>Você será redirecionado para a pesquisa do caminhão. Obrigado por participar!</p>
-  <div class="loader"></div>
+
 </body>
 </html>
