@@ -1,61 +1,84 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <title>Registro de Pesquisa</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      color: #333;
-      text-align: center;
-      padding-top: 100px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação Rezende</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+        body {
+            background-color: #141b4d;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .logo {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #ff7a15;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+        }
+        .loader {
+            border: 6px solid #ffffff;
+            border-top: 6px solid #ff7a15;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-top: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLZbySQBptbSsYxC0er5ppOCCe9x9k4X8-0hptQCFk6ByuMq3YxCz5eKNHdfug/exec";
+        const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform";
+
+        async function registrarPesquisa() {
+            const params = new URLSearchParams(window.location.search);
+            const caminhao = params.get("caminhao") || "desconhecido";
+
+            const data = {
+                tipo: "pesquisa",
+                caminhao: caminhao,
+                link: FORM_URL
+            };
+
+            try {
+                await fetch(APPS_SCRIPT_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                    mode: 'no-cors'
+                });
+                console.log("Registro de pesquisa enviado.");
+            } catch (error) {
+                console.error("Erro ao registrar pesquisa:", error);
+            }
+
+            setTimeout(() => {
+                window.location.href = FORM_URL;
+            }, 1000);
+        }
+    </script>
 </head>
-<body>
-  <h2>Registrando acesso...</h2>
-  <p id="status">Aguarde um instante...</p>
-
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const caminhao = params.get("caminhao");
-
-    const links = {
-      "01": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR1A/viewform",
-      "02": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR2A/viewform",
-      "03": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR3A/viewform",
-      "04": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR4A/viewform",
-      "05": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVR5A/viewform"
-    };
-
-    const link = links[caminhao];
-    const colaborador = localStorage.getItem("colaborador") || "Visitante";
-
-    if (!link) {
-      document.getElementById("status").innerText = "Erro: Caminhão inválido.";
-      throw new Error("Caminhão inválido");
-    }
-
-    const payload = {
-      caminhao,
-      link,
-      colaborador
-    };
-
-    fetch("https://script.google.com/macros/s/SEU_DEPLOY_ID/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    }).finally(() => {
-      document.getElementById("status").innerText = "Redirecionando para o formulário...";
-      setTimeout(() => {
-        window.location.href = link;
-      }, 1000);
-    });
-  </script>
+<body onload="registrarPesquisa()">
+    <img src="https://raw.githubusercontent.com/DesignerRezende/avaliacoes-rezende/main/Logo%20Rezende%20Branca.png" alt="Rezende Materiais para Construção" class="logo">
+    <h1>Estamos quase lá!</h1>
+    <p>Obrigado por confiar na <strong>Rezende Materiais para Construção</strong>. Você será redirecionado para responder nossa pesquisa.</p>
+    <div class="loader"></div>
 </body>
 </html>
