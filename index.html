@@ -44,6 +44,9 @@
     }
   </style>
   <script>
+    // ***** ATENÇÃO AQUI, CAROL! *****
+    // VOCÊ DEVE SUBSTITUIR ESTA URL PELA URL DA SUA ÚLTIMA IMPLANTAÇÃO DO APPS SCRIPT.
+    // ESSA URL DEVE SER A MESMA QUE VOCÊ USOU OU USA PARA AS AVALIAÇÕES DO GOOGLE.
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLZbySQBptbSsYxC0er5ppOCCe9x9k4X8-0hptQCFk6ByuMq3YxCz5eKNHdfug/exec";
     const LINK_FORMULARIO = "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform";
 
@@ -52,7 +55,7 @@
       const caminhao = params.get("caminhao") || "desconhecido";
 
       const dados = {
-        tipo: "pesquisa",
+        tipo: "pesquisa", // Isso é crucial para o Apps Script identificar que é uma pesquisa
         caminhao: caminhao,
         link: LINK_FORMULARIO
       };
@@ -64,8 +67,9 @@
           body: JSON.stringify(dados),
           mode: 'no-cors'
         });
+        console.log("Dados de pesquisa de caminhão enviados com sucesso.");
       } catch (error) {
-        console.error("Erro ao registrar pesquisa:", error);
+        console.error("Erro ao registrar pesquisa de caminhão:", error);
       }
 
       // Redirecionar após 1s
