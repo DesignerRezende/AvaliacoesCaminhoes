@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pesquisa Rezende</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+    body {
+      background-color: #141b4d;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .logo {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #ff7a15;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 18px;
+    }
+    .loader {
+      border: 6px solid #ffffff;
+      border-top: 6px solid #ff7a15;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-top: 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  <script>
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLZbySQBptbSsYxC0er5ppOCCe9x9k4X8-0hptQCFk6ByuMq3YxCz5eKNHdfug/exec";
+
+    const FORM_LINKS = {
+      "01": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform",
+      "02": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform",
+      "03": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform",
+      "04": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform",
+      "05": "https://docs.google.com/forms/d/e/1FAIpQLScKJ-OVRz3LMVyh0u-wzfExRoGetYrYrevgEtXJjjiqTJF4cg/viewform"
+    };
+
+    async function registrarAcesso() {
+      const params = new URLSearchParams(window.location.search);
+      const caminhao = params.get("caminhao") || "01";
+      const linkFormulario = FORM_LINKS[caminhao] || FORM_LINKS["01"];
+
+      const data = {
+        tipo: "pesquisa",
+        caminhao: "Caminhão " + caminhao,
+        link: linkFormulario
+      };
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+          mode: 'no-cors'
+        });
+      } catch (error) {
+        console.error("Erro ao registrar acesso:", error);
+      }
+
+      setTimeout(() => {
+        window.location.href = linkFormulario;
+      }, 1000);
+    }
+  </script>
+</head>
+<body onload="registrarAcesso()">
+  <img src="https://raw.githubusercontent.com/DesignerRezende/avaliacoes-rezende/main/Logo%20Rezende%20Branca.png" alt="Logo Rezende" class="logo" />
+  <h1>Estamos quase lá!</h1>
+  <p>Você será redirecionado para a pesquisa do caminhão. Obrigado por participar!</p>
+  <div class="loader"></div>
+</body>
+</html>
