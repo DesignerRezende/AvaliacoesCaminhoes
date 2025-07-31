@@ -58,11 +58,11 @@
       const caminhao = params.get("caminhao") || "01";
       const linkFormulario = FORM_LINKS[caminhao] || FORM_LINKS["01"];
 
-      const data = {
-        tipo: "pesquisa",
-        caminhao: "Caminhão " + caminhao,
-        link: linkFormulario
-      };
+const data = {
+  tipo: "pesquisa",
+  caminhao: "Caminhão " + caminhao,
+  link: linkFormulario
+};
 
       try {
         await fetch(APPS_SCRIPT_URL, {
